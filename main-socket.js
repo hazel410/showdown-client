@@ -6,21 +6,7 @@ function getformattedResponse(command) {
   // all these consts require updates for gen 10
   const VALID_DT_ALIASES = ['details', 'dt', 'dt1', 'dt2', 'dt3', 'dt4', 'dt5', 'dt6', 'dt7', 'dt8', 'dt9']
   const VALID_DS_ALIASES = ['dexsearch', 'ds', 'nds', 'ds1', 'ds2', 'ds3', 'ds4', 'ds5', 'ds6', 'ds7', 'ds8', 'ds9']
-  switch (responseList[0]) {
-    case "details":
-    case "dt1":
-    case "dt2":
-    case "dt3":
-    case "dt4":
-    case "dt5":
-    case "dt6":
-    case "dt7":
-    case "dt8":
-    case "dt9":
-    case "dt10":
-      
-      break;
-  }
+  const VALID_MS_ALIASES = []
 }
 
 function main() {
@@ -41,9 +27,8 @@ function main() {
     } else {
       socket.send(`|${command}`);
       recursivePrompt();
-    }
-  });
-}
+    }});
+  } 
 
   // listen
   socket.on('open', () => {

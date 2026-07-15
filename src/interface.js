@@ -1,6 +1,7 @@
+import Dex from "pokemon-showdown";
 // abstraction of the properties of a command
 // each command will need its own instance of the interface
-class commandInterface {
+export class commandInterface {
   aliases = [];
   
   constructor() {
@@ -17,13 +18,7 @@ class commandInterface {
     throw new Error('error: handleCommand method must be implemented by subclasses');
   }
 
-  #getCommandResponse(command) {
-    throw new Error('error: getCommandResponse method must be implemented by subclasses');
-  }
-
-  #displayCommandResponse(response) {
-    throw new Error('error: displayCommandResponse method must be implemented by subclasses');
+  getCommandAliases() {
+    return this.aliases;
   }
 }
-
-module.exports = commandInterface;

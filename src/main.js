@@ -1,3 +1,4 @@
+import './interface';
 const {Dex} = require('pokemon-showdown');
 const readLine = require('readline');
 
@@ -7,35 +8,24 @@ const readLine = require('readline');
 // instance of the interface
 class commandManager {
   constructor() {
-    this.commandIDs = [];
     this.commandAliases = [];
+    this.commandInterfaces = [];
   }
 
-  processCommand(command) {
-    this.emit('command', command);
+  registerInterface(commandInterface) {
+    // this function should be called at the beginning and then never again
+    this.commandAliases(commandInterface.getComamndAliases());
+    this.commandInterfaces.push(commandInterface);
+    commandInterface.init(this);
   }
-}
 
-
-// abstraction of the properties of a command
-// each command will need its own instance of the interface
-class commandInterface {
-  constructor() {
-    if (this.constructor === commandInterface) {
-      throw new Error('error: commandInterface class cannot be instantiated directly');
+  dispatchCommand(command) {
+    for (let i = 0; i < this.commandAliases.length; i++) {
+      if (this.commandAliases.includes(command)) {
+        this.commandInterfaces[i].handleCommand(command);
+        break;
+      }
     }
-  }
-
-  init(commandManager) {
-    throw new Error('error: init method must be implemented by subclasses');
-  }
-
-  getCommandResponse(command) {
-    throw new Error('error: getCommandResponse method must be implemented by subclasses');
-  }
-
-  displayCommandResponse(response) {
-    throw new Error('error: displayCommandResponse method must be implemented by subclasses');
   }
 }
 
@@ -63,4 +53,8 @@ function recursivePrompt() {
   });
 }
 
-recursivePrompt();
+function main() {
+  // init all plugins... this cannot be the right way to do this
+  const manager = new commandManager();
+  manager.registerInterface(new detailsCommand());
+}

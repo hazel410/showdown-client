@@ -17,16 +17,16 @@ class commandManager {
 
   registerInterface(commandInterface) {
     // this function should be called at the beginning and then never again
-    console.log(commandInterface);
-    this.commandAliases.push(commandInterface.getCommandAliases());
+    this.commandAliases.push(commandInterface.getAliases());
     this.commandInterfaces.push(commandInterface);
     commandInterface.init(this);
+
+    console.log(`> status: ${commandInterface.getID()} interface registered`);
   }
 
   getRawCommandName(rawCommand) {
     // supports commands of the form
-    // > "/dt chimchar" and
-    // > "dt chimchar"
+    // "/dt chimchar" and "dt chimchar"
     let tokenPosition = rawCommand.search(COMMAND_TOKEN);
     let spacePosition = rawCommand.search(" ");
 
@@ -39,36 +39,32 @@ class commandManager {
     // gets all of the string before the first space,
     // getting all of the string when no spaces
     if (spacePosition !== -1) {
-      rawCommand = rawCommand.slice(0, spacePosition);
+      rawCommand = rawCommand.slice(0, spacePosition - 1);
     }
 
     return rawCommand.toLowerCase();
   }
 
   dispatchCommand(command) {
-    console.log(`status: searching for interface ${command}`)
+    console.log(`> status: searching for interface ${command}`)
     for (let i = 0; i < this.commandAliases.length; i++) {
-      if (this.commandAliases.includes(this.getRawCommandName(command))) {
-        console.log(`status: interface found!`);
+      if (this.commandAliases[i].includes(this.getRawCommandName(command))) {
         this.commandInterfaces[i].handleCommand(command);
-        break;
+        console.log(`> status: interface found!`);
+        return;
       }
     }
-    console.log('status: unable to find interface');
+    console.log('> status: unable to find interface');
   }
 
-  start() {
-    const readInterface = readLine.createInterface({
-    input: process.stdin,
-    output: process.stdout
-    });
-  
-    readInterface.question(TEXT_LINE, (command) => {
+  start(readlineInterface) {
+    readlineInterface.question(TEXT_LINE, (command) => {
       if (VALID_EXIT_COMMANDS.includes(command.toLowerCase())) {
-        readInterface.close();
-        return;
+        readlineInterface.close();
+        console.log('> status: exiting...')
       } else {
         this.dispatchCommand(command);
+        this.start(readlineInterface);
       }
     });
   }
@@ -80,7 +76,12 @@ function main() {
   manager.registerInterface(new detailsCommand());
 
   // now, start the manager up!
-  manager.start();
+  const readInterface = readLine.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  manager.start(readInterface);
 }
 
 main();

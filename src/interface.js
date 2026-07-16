@@ -1,24 +1,27 @@
-import Dex from "pokemon-showdown";
 // abstraction of the properties of a command
 // each command will need its own instance of the interface
 export class commandInterface {
+  ID = ''
   aliases = [];
-  
   constructor() {
     if (this.constructor === commandInterface) {
-      throw new Error('error: commandInterface class cannot be instantiated directly');
+      throw new Error('commandInterface class cannot be instantiated directly');
     }
   }
 
   init() {
-    throw new Error('error: init method must be implemented by subclasses');
+    throw new Error('init method must be implemented by subclasses');
   }
 
   handleCommand(command) {
-    throw new Error('error: handleCommand method must be implemented by subclasses');
+    throw new Error('handleCommand method must be implemented by subclasses');
   }
 
-  getCommandAliases() {
-    return this.aliases;
+  getAliases() {
+    throw new Error('getAliases method must be implemented by subclasses');
+  }
+
+  getID() {
+    throw new Error('getID method must be implemented by subclasses');
   }
 }

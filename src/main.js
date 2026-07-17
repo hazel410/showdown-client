@@ -1,5 +1,6 @@
 import {detailsCommand} from "../data/commands/details.js";
 import readLine from 'readline';
+import WebSocket from "ws";
 
 const TEXT_LINE = '########################\n';
 const VALID_EXIT_COMMANDS = ['/exit', '/ex', 'exit', 'ex'];
@@ -11,20 +12,28 @@ const COMMAND_TOKEN = '/';
 // instance of the interface
 class commandManager {
   constructor() {
-    this.commandAliases = [];
     this.commandInterfaces = [];
+    this.socket = new WebSocket('ws://sim3.psim.us:8000/showdown/websocket');
+
+    this.socket.on('connection', (ws) => {
+      ws.on('message', (response) => {
+        // this.dispatchCommand(response);
+        console.log(`status: recieved response ${response}`);
+      });
+      ws.on('close', () => {
+        console.log('Client disconnected');
+      });
+    }); 
   }
 
   registerInterface(commandInterface) {
     // this function should be called at the beginning and then never again
-    this.commandAliases.push(commandInterface.getAliases());
     this.commandInterfaces.push(commandInterface);
     commandInterface.init(this);
-
     console.log(`> status: ${commandInterface.getID()} interface registered`);
   }
 
-  getRawCommandName(rawCommand) {
+  getCommandToken(rawCommand) {
     // supports commands of the form
     // "/dt chimchar" and "dt chimchar"
     let tokenPosition = rawCommand.search(COMMAND_TOKEN);
@@ -46,15 +55,25 @@ class commandManager {
   }
 
   dispatchCommand(command) {
-    console.log(`> status: searching for interface ${command}`)
-    for (let i = 0; i < this.commandAliases.length; i++) {
-      if (this.commandAliases[i].includes(this.getRawCommandName(command))) {
-        this.commandInterfaces[i].handleCommand(command);
-        console.log(`> status: interface found!`);
-        return;
+    let currentInterface;
+    let currentCommandToken;
+    this.socket.send(`|${command}`);
+    for (i = 0; i < this.commandInterfaces.length; i++) {
+      currentInterface = this.commandInterfaces[i];
+      currentCommandToken = this.getCommandToken
+      if (currentInterface.getAliases().includes(currentCommandToken)) {
+        currentInterface.handleCommand();
       }
     }
-    console.log('> status: unable to find interface');
+    // console.log(`> status: searching for interface ${command}`)
+    // for (let i = 0; i < this.commandAliases.length; i++) {
+    //   if (this.commandAliases[i].includes(this.getCommandToken(command))) {
+    //     this.commandInterfaces[i].handleCommand(command);
+    //     console.log(`> status: interface found!`);
+    //     return;
+    //   }
+    // }
+    // console.log('> status: unable to find interface');``
   }
 
   start(readlineInterface) {
@@ -63,7 +82,7 @@ class commandManager {
         readlineInterface.close();
         console.log('> status: exiting...')
       } else {
-        this.dispatchCommand(command);
+        this.socket.send(command);
         this.start(readlineInterface);
       }
     });

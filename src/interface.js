@@ -9,19 +9,25 @@ export class commandInterface {
     }
   }
 
-  init() {
-    throw new Error('init method must be implemented by subclasses');
+  init(commandManager) {
+    commandManager.on('command', this.handleCommandEvent.bind(this));
   }
 
-  handleCommand(command) {
-    throw new Error('handleCommand method must be implemented by subclasses');
+  handleCommandEvent(command, response) {
+    if (this.aliases.includes(this.getCommandToken(command))) {
+
+    }
+  }
+
+  displayResponse(response) {
+    throw new Error('formatResponse method must be implemented by subclasses');
   }
 
   getAliases() {
-    throw new Error('getAliases method must be implemented by subclasses');
+    return this.aliases;
   }
 
   getID() {
-    throw new Error('getID method must be implemented by subclasses');
+    return this.ID;
   }
 }

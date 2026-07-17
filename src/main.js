@@ -54,7 +54,31 @@ class programManager {
       console.log(TEXT_LINE);
     }
   }
+  parseServerResponse(response) {
+    // 1. Determine if infobox
+    // Regex.search("infobox") etc.
+    this.parseInfoBox(response);
 
+    // 2. Determine if pokemon
+    // Regex.search("pokemonnamecol")
+    this.parsePokemon(response);
+    
+    // 3. Determine if move
+    // Regex.search("movenamecol")
+    this.parseMove(response);
+
+    // Ignore message
+  }
+  parseMove() {
+
+  }
+
+  parsePokemon() {
+
+  }
+  parseInfoBox() {
+
+  }
   shutdown() {
     this.readlineInterface.close();
     this.socket.close();

@@ -48,36 +48,47 @@ class programManager {
 
   displayServerResponse(response) {
     response = `${response}`
-    if (response.slice(0, 12) !== "|updateuser|") {
+    if (response.slice(0, 12) !== "|updateuser|" && response.slice(0,10) !== "|challstr|") {
       console.log(TEXT_LINE);
-      console.log(`[server]: ${response}`);
+      // console.log(`[server]: ${response}`);
+      console.log(this.parseServerResponse(response));
       console.log(TEXT_LINE);
     }
   }
   parseServerResponse(response) {
+    // Regex for replacing html tags
+    let striptags = new RegExp("<[^>]*>", "g");
+    let replaceStr = '$';
+
     // 1. Determine if infobox
-    // Regex.search("infobox") etc.
-    this.parseInfoBox(response);
+    let regexp = new RegExp("infobox", "g");
+    if (regexp.test(response)) {
+      return this.parseInfoBox(response.replaceAll(striptags, replaceStr));
+    }
 
     // 2. Determine if pokemon
-    // Regex.search("pokemonnamecol")
-    this.parsePokemon(response);
-    
+    regexp = new RegExp("pokemonnamecol", "g");
+    if (regexp.test(response)) {
+      return this.parsePokemon(response.replaceAll(striptags, replaceStr));
+    }
+
     // 3. Determine if move
-    // Regex.search("movenamecol")
-    this.parseMove(response);
-
-    // Ignore message
+    regexp = new RegExp("movenamecol", "g");
+    if (regexp.test(response)) {
+      return this.parseMove(response.replaceAll(striptags, replaceStr));
+    }
+  
+    return `Error: Invalid Command`;
   }
-  parseMove() {
-
+  parseMove(response) {
+    return `[parseMove]: ${response}`;
   }
 
-  parsePokemon() {
-
+  parsePokemon(response) {
+    return `[parsePokemon]: ${response}`;
   }
-  parseInfoBox() {
-
+  parseInfoBox(response) {
+    return `[parseInfoBox]: ${response}`;
   }
   shutdown() {
     this.readlineInterface.close();

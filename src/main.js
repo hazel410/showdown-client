@@ -51,7 +51,7 @@ class programManager {
     response = `${response}`
     if (response.slice(0, 12) !== "|updateuser|" && response.slice(0,10) !== "|challstr|") {
       console.log(TEXT_LINE);
-      // console.log(`[server]: ${response}`);
+      //console.log(`[server]: ${response}`);
       console.log(this.parseServerResponse(response));
       console.log(TEXT_LINE);
     }
@@ -59,7 +59,7 @@ class programManager {
   parseServerResponse(response) {
     // Regex for replacing html tags
     const striptags = new RegExp("<[^>]*>", "g");
-    const replaceStr = '$';
+    const replaceStr = '';
     let strippedResponse = response.replaceAll(striptags, replaceStr);
 
     // 1. Determine if infobox

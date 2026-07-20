@@ -1,4 +1,5 @@
 import readLine from 'readline';
+import Stream from 'stream';
 import WebSocket from "ws";
 
 const TEXT_LINE = '########################';
@@ -57,25 +58,26 @@ class programManager {
   }
   parseServerResponse(response) {
     // Regex for replacing html tags
-    let striptags = new RegExp("<[^>]*>", "g");
-    let replaceStr = '$';
+    const striptags = new RegExp("<[^>]*>", "g");
+    const replaceStr = '$';
+    let strippedResponse = response.replaceAll(striptags, replaceStr);
 
     // 1. Determine if infobox
     let regexp = new RegExp("infobox", "g");
     if (regexp.test(response)) {
-      return this.parseInfoBox(response.replaceAll(striptags, replaceStr));
+      return this.parseInfoBox(strippedResponse);
     }
 
     // 2. Determine if pokemon
     regexp = new RegExp("pokemonnamecol", "g");
     if (regexp.test(response)) {
-      return this.parsePokemon(response.replaceAll(striptags, replaceStr));
+      return this.parsePokemon(strippedResponse);
     }
 
     // 3. Determine if move
     regexp = new RegExp("movenamecol", "g");
     if (regexp.test(response)) {
-      return this.parseMove(response.replaceAll(striptags, replaceStr));
+      return this.parseMove(strippedResponse);
     }
   
     return `Error: Invalid Command`;

@@ -1,6 +1,12 @@
 import readLine from 'readline';
 import Stream from 'stream';
 import WebSocket from "ws";
+import Message from "message";
+import MoveMsg from "moveMsg";
+import InfoBox from "infoboxMsg";
+import PokemonMsg from "pokemonMsg";
+// import terminalImage from 'terminal-image';
+// import got from 'got';
 
 const TEXT_LINE = '########################';
 const VALID_EXIT_COMMANDS = ['/exit', '/ex', 'exit', 'ex'];
@@ -51,47 +57,39 @@ class programManager {
     response = `${response}`
     if (response.slice(0, 12) !== "|updateuser|" && response.slice(0,10) !== "|challstr|") {
       console.log(TEXT_LINE);
-      //console.log(`[server]: ${response}`);
+      console.log(`[server]: ${response}`);
       console.log(this.parseServerResponse(response));
       console.log(TEXT_LINE);
     }
   }
   parseServerResponse(response) {
-    // Regex for replacing html tags
-    const striptags = new RegExp("<[^>]*>", "g");
-    const replaceStr = '';
-    let strippedResponse = response.replaceAll(striptags, replaceStr);
-
+    let message = null;
+    let done = false;
     // 1. Determine if infobox
     let regexp = new RegExp("infobox", "g");
     if (regexp.test(response)) {
-      return this.parseInfoBox(strippedResponse);
+      message = new InfoboxMsg(response);
+      done = true;
     }
-
     // 2. Determine if pokemon
-    regexp = new RegExp("pokemonnamecol", "g");
-    if (regexp.test(response)) {
-      return this.parsePokemon(strippedResponse);
+    if (!done) {
+      regexp = new RegExp("pokemonnamecol", "g");
+      if (regexp.test(response)) {
+        message = new PokemonMsg(response);
+        done = true;
+      }
     }
-
     // 3. Determine if move
-    regexp = new RegExp("movenamecol", "g");
-    if (regexp.test(response)) {
-      return this.parseMove(strippedResponse);
+    if (!done) {
+      regexp = new RegExp("movenamecol", "g");
+      if (regexp.test(response)) {
+        message = new MoveMsg(response);
+        done = true;
+      }
     }
-  
-    return `Error: Invalid Command`;
-  }
-  parseMove(response) {
-    return `[parseMove]: ${response}`;
+    return message.parseMessage();
   }
 
-  parsePokemon(response) {
-    return `[parsePokemon]: ${response}`;
-  }
-  parseInfoBox(response) {
-    return `[parseInfoBox]: ${response}`;
-  }
   shutdown() {
     this.readlineInterface.close();
     this.socket.close();

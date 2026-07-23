@@ -1,5 +1,4 @@
-class PokemonMsg {
-  message;
+class PokemonMsg extends Message {
   pkmnTier;
   pkmnName;
   pkmnTypes;
@@ -17,11 +16,19 @@ class PokemonMsg {
   pkmnEvolutions;
 
   constructor(message) {
-    this.message = message;
+    super(message);
   }
 
   parseMessage() {
+    // 1. Get type(s)
 
+    // 2. Get smogon link
+
+    // 3. Strip html tags for easier parsing
+    const striptags = new RegExp("<[^>]*>", "g");
+    const replaceStr = '';
+    this.message = this.message.replaceAll(striptags, replaceStr);
+    return this.message;
   }
 
   

@@ -63,29 +63,24 @@ class programManager {
     }
   }
   parseServerResponse(response) {
-    let message = null;
-    let done = false;
+    let message = new Message();
     // 1. Determine if infobox
     let regexp = new RegExp("infobox", "g");
     if (regexp.test(response)) {
       message = new InfoboxMsg(response);
-      done = true;
+      return message.parseMessage();
     }
     // 2. Determine if pokemon
-    if (!done) {
-      regexp = new RegExp("pokemonnamecol", "g");
-      if (regexp.test(response)) {
-        message = new PokemonMsg(response);
-        done = true;
-      }
+    regexp = new RegExp("pokemonnamecol", "g");
+    if (regexp.test(response)) {
+      message = new PokemonMsg(response);
+      return message.parseMessage();
     }
     // 3. Determine if move
-    if (!done) {
-      regexp = new RegExp("movenamecol", "g");
-      if (regexp.test(response)) {
-        message = new MoveMsg(response);
-        done = true;
-      }
+    regexp = new RegExp("movenamecol", "g");
+    if (regexp.test(response)) {
+      message = new MoveMsg(response);
+      return message.parseMessage();
     }
     return message.parseMessage();
   }

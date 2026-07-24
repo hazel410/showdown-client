@@ -57,7 +57,7 @@ class programManager {
     response = `${response}`
     if (response.slice(0, 12) !== "|updateuser|" && response.slice(0,10) !== "|challstr|") {
       console.log(TEXT_LINE);
-      console.log(`[server]: ${response}`);
+      // console.log(`[server]: ${response}`);
       console.log(this.parseServerResponse(response));
       console.log(TEXT_LINE);
     }

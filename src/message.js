@@ -1,11 +1,14 @@
 export class Message {
   message;
+  isValidCommand;
   constructor(message) {
     this.message = message;
   }
   
-  parseMessage() {
-    return `Error: Invalid Command`;
+  parseMessage() {}
+
+  printInfo() {
+    console.log(`Error: Invalid Command`);
   }
 }
 

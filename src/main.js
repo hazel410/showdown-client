@@ -58,31 +58,35 @@ class programManager {
     if (response.slice(0, 12) !== "|updateuser|" && response.slice(0,10) !== "|challstr|") {
       console.log(TEXT_LINE);
       // console.log(`[server]: ${response}`);
-      console.log(this.parseServerResponse(response));
+      this.parseServerResponse(response).printInfo();
       console.log(TEXT_LINE);
     }
   }
   parseServerResponse(response) {
-    let message = new Message();
+    let errorMessage = new Message();
+    let message = null;
     // 1. Determine if infobox
     let regexp = new RegExp("infobox", "g");
     if (regexp.test(response)) {
       message = new InfoboxMsg(response);
-      return message.parseMessage();
+      if (message.parseMessage()) return message;
+      return errorMessage;
     }
     // 2. Determine if pokemon
     regexp = new RegExp("pokemonnamecol", "g");
     if (regexp.test(response)) {
       message = new PokemonMsg(response);
-      return message.parseMessage();
+      if (message.parseMessage()) return message;
+      return errorMessage;
     }
     // 3. Determine if move
     regexp = new RegExp("movenamecol", "g");
     if (regexp.test(response)) {
       message = new MoveMsg(response);
-      return message.parseMessage();
+      if (message.parseMessage()) return message;
+      return errorMessage;
     }
-    return message.parseMessage();
+    return errorMessage;
   }
 
   shutdown() {

@@ -1,4 +1,5 @@
-class MoveMsg extends Message {
+import {Message} from "./message.js";
+export class MoveMsg extends Message {
   moveName;
   moveType;
   moveCategory;
@@ -16,3 +17,4 @@ class MoveMsg extends Message {
     
   }
 }
+export default MoveMsg;

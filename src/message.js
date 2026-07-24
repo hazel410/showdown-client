@@ -1,4 +1,4 @@
-class Message {
+export class Message {
   message;
   constructor(message) {
     this.message = message;
@@ -8,3 +8,5 @@ class Message {
     return `Error: Invalid Command`;
   }
 }
+
+export default Message;

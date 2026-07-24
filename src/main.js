@@ -1,10 +1,10 @@
 import readLine from 'readline';
 import Stream from 'stream';
 import WebSocket from "ws";
-import Message from "message";
-import MoveMsg from "moveMsg";
-import InfoBox from "infoboxMsg";
-import PokemonMsg from "pokemonMsg";
+import Message from "./message.js";
+import MoveMsg from "./moveMsg.js";
+import InfoboxMsg from "./infoboxMsg.js";
+import PokemonMsg from "./pokemonMsg.js";
 // import terminalImage from 'terminal-image';
 // import got from 'got';
 

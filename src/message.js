@@ -1,6 +1,5 @@
 export class Message {
   message;
-  isValidCommand;
   constructor(message) {
     this.message = message;
   }

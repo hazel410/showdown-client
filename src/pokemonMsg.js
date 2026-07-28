@@ -41,7 +41,7 @@ export class PokemonMsg extends Message {
     regexp = /<[^>]*>/g;
     const replaceStr = '';
     this.message = this.message.replaceAll(regexp, replaceStr);
-
+    
     // 4. Get all non-optional fields
     regexp = /\/raw (?<tier>\w+)  (?<name>\w+(?: \w+)?)  (?<ability1>[A-Z]*[a-z]*(?: [A-Z]*[a-z]*)?)(?<ability2>[A-Z]*[a-z]*(?: [A-Z]*[a-z]*)?)?(?<ability3>[A-Z]*[a-z]*(?: [A-Z]*[a-z]*)?)?.*?HP(?<HP>[0-9]+) Atk(?<Atk>[0-9]+) Def(?<Def>[0-9]+) SpA(?<SpA>[0-9]+) SpD(?<SpD>[0-9]+) Spe(?<Spe>[0-9]+) BST(?<BST>[0-9]+)[\s\S]*Dex\#: (?<dexNo>[0-9]+).*Gen: (?<genNo>[0-9]+).*Height: (?<height>[0-9\.\w ]+).*Weight: (?<weight>[^\)]*\)).*Dex Colour: (?<dexColour>\w*).*Egg Group\(s\): (?<eggGroups>[^\&]*)/;
     if (!regexp.test(this.message)) return false;

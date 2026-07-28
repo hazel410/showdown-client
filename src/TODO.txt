@@ -1,0 +1,2 @@
+Infobox class
+make stripping html tags an inherited method

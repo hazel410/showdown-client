@@ -1,10 +1,13 @@
 import {Message} from "./message.js";
-export class InfoboxMessage extends Message {
+export class TextMessage extends Message {
   constructor(message) {
     super(message);
   }
   parseMessage() {
+    // TODO THIS SHIT
     // 1. Strip html tags
+    console.log("TODO: text messages");
+    return false;
     let regexp = /<[^>]*>/g;
     const replaceStr = '';
     this.message = this.message.replaceAll(regexp, replaceStr);
@@ -25,4 +28,4 @@ export class InfoboxMessage extends Message {
     console.log(this.message);
   }
 }
-export default InfoboxMessage;
+export default TextMessage;

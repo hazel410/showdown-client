@@ -9,6 +9,7 @@ export class Message {
   printInfo() {
     console.log(`Error: Invalid Command`);
   }
+
 }
 
 export default Message;

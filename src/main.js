@@ -56,7 +56,7 @@ class programManager {
     response = `${response}`
     if (response.slice(0, 12) !== "|updateuser|" && response.slice(0,10) !== "|challstr|") {
       console.log(TEXT_LINE);
-      //console.log(`[server]: ${response}`);
+      console.log(`[server]: ${response}`);
       this.parseServerResponse(response).printInfo();
       console.log(TEXT_LINE);
     }
@@ -91,6 +91,11 @@ class programManager {
       message = new AbilityMessage(response);
       if (message.parseMessage()) return message;
       return errorMessage;
+    }
+    // 5. Determine if pure text (i.e. /help or command w/o args)
+    regexp = /\/text/;
+    if (regexp.test(response)) {
+      
     }
     return errorMessage;
   }

@@ -1,5 +1,5 @@
 import {Message} from "./message.js";
-export class MoveMsg extends Message {
+export class MoveMessage extends Message {
   name;
   type;
   category;
@@ -8,7 +8,7 @@ export class MoveMsg extends Message {
   PP;
   effect;
   extraInfo;
-  
+  dexLink;
   constructor(message) {
     super(message);
   }
@@ -57,6 +57,7 @@ export class MoveMsg extends Message {
     console.log(`${this.name}|${this.type}|${this.category}|Power: ${this.power}|Accuracy: ${this.accuracy}|PP: ${this.PP}`)
     console.log(this.effect);
     console.log(this.extraInfo);
+    console.log(this.dexLink);
   }
 }
-export default MoveMsg;
+export default MoveMessage;

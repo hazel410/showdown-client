@@ -2,11 +2,10 @@ import readLine from 'readline';
 import Stream from 'stream';
 import WebSocket from "ws";
 import Message from "./message.js";
-import MoveMsg from "./moveMsg.js";
-import InfoboxMsg from "./infoboxMsg.js";
-import PokemonMsg from "./pokemonMsg.js";
-// import terminalImage from 'terminal-image';
-// import got from 'got';
+import MoveMessage from "./moveMessage.js";
+import InfoboxMessage from "./infoboxMessage.js";
+import PokemonMessage from "./pokemonMessage.js";
+import AbilityMessage from './abilityMessage.js';
 
 const TEXT_LINE = '########################';
 const VALID_EXIT_COMMANDS = ['/exit', '/ex', 'exit', 'ex'];
@@ -57,7 +56,7 @@ class programManager {
     response = `${response}`
     if (response.slice(0, 12) !== "|updateuser|" && response.slice(0,10) !== "|challstr|") {
       console.log(TEXT_LINE);
-      console.log(`[server]: ${response}`);
+      //console.log(`[server]: ${response}`);
       this.parseServerResponse(response).printInfo();
       console.log(TEXT_LINE);
     }
@@ -66,23 +65,30 @@ class programManager {
     let errorMessage = new Message();
     let message = null;
     // 1. Determine if infobox
-    let regexp = new RegExp("infobox", "g");
+    let regexp = /infobox/;
     if (regexp.test(response)) {
-      message = new InfoboxMsg(response);
+      message = new InfoboxMessage(response);
       if (message.parseMessage()) return message;
       return errorMessage;
     }
     // 2. Determine if pokemon
-    regexp = new RegExp("pokemonnamecol", "g");
+    regexp = /pokemonnamecol/;
     if (regexp.test(response)) {
-      message = new PokemonMsg(response);
+      message = new PokemonMessage(response);
       if (message.parseMessage()) return message;
       return errorMessage;
     }
     // 3. Determine if move
-    regexp = new RegExp("movenamecol", "g");
+    regexp = /movenamecol/;
     if (regexp.test(response)) {
-      message = new MoveMsg(response);
+      message = new MoveMessage(response);
+      if (message.parseMessage()) return message;
+      return errorMessage;
+    }
+    // 4. Determine if ability
+    regexp = /abilitydesccol/;
+    if (regexp.test(response)) {
+      message = new AbilityMessage(response);
       if (message.parseMessage()) return message;
       return errorMessage;
     }

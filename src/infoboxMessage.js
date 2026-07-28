@@ -1,5 +1,5 @@
 import {Message} from "./message.js";
-export class InfoboxMsg extends Message {
+export class InfoboxMessage extends Message {
   constructor(message) {
     super(message);
   }
@@ -7,4 +7,4 @@ export class InfoboxMsg extends Message {
 
   }
 }
-export default InfoboxMsg;
+export default InfoboxMessage;

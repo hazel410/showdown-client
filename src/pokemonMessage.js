@@ -1,5 +1,5 @@
 import {Message} from "./message.js";
-export class PokemonMsg extends Message {
+export class PokemonMessage extends Message {
   tier;
   name;
   types;
@@ -111,4 +111,4 @@ export class PokemonMsg extends Message {
   }
 }
 
-export default PokemonMsg;
+export default PokemonMessage;

@@ -7,14 +7,7 @@ export class PokemonMessage extends Message {
   ability2;
   ability3;
   stats;  // [HP, Atk, Def, SpA, SpD, Spe, BST]
-  dexNo;
-  genNo;
-  height;
-  weight;
-  dexColour;
-  eggGroups;
-  preEvolution;
-  evolutions;
+  extraInfo;
   dexLink;
   constructor(message) {
     super(message);
@@ -38,12 +31,9 @@ export class PokemonMessage extends Message {
     this.dexLink = match.groups.link;
 
     // 3. Strip html tags for easier parsing
-    regexp = /<[^>]*>/g;
-    const replaceStr = '';
-    this.message = this.message.replaceAll(regexp, replaceStr);
-    
-    // 4. Get all non-optional fields
-    regexp = /\/raw (?<tier>\w+)  (?<name>\w+(?:[ -]\w+)?)  (?<ability1>[A-Z]*[a-z]*(?: [A-Z]*[a-z]*)?)(?<ability2>[A-Z]*[a-z]*(?: [A-Z]*[a-z]*)?)?(?<ability3>[A-Z]*[a-z]*(?: [A-Z]*[a-z]*)?)?.*?HP(?<HP>[0-9]+) Atk(?<Atk>[0-9]+) Def(?<Def>[0-9]+) SpA(?<SpA>[0-9]+) SpD(?<SpD>[0-9]+) Spe(?<Spe>[0-9]+) BST(?<BST>[0-9]+)[\s\S]*Dex\#: (?<dexNo>[0-9]+).*Gen: (?<genNo>[0-9]+).*Height: (?<height>[0-9\.\w ]+).*Weight: (?<weight>[^\)]*\)).*Dex Colour: (?<dexColour>\w*).*Egg Group\(s\): (?<eggGroups>[^\&]*)/;
+    this.stripHTMLTags();
+    // 4. Get tier, name, abilities, and stats
+    regexp = /(?<tier>\w+)  (?<name>\w+(?:[ -]\w+)*)  (?<ability1>[A-Z]*[a-z]*(?: [A-Z]*[a-z]*)?)(?<ability2>[A-Z]*[a-z]*(?: [A-Z]*[a-z]*)?)?(?<ability3>[A-Z]*[a-z]*(?: [A-Z]*[a-z]*)?)?.*?HP(?<HP>[0-9]+) Atk(?<Atk>[0-9]+) Def(?<Def>[0-9]+) SpA(?<SpA>[0-9]+) SpD(?<SpD>[0-9]+) Spe(?<Spe>[0-9]+) BST(?<BST>[0-9]+)/;
     if (!regexp.test(this.message)) return false;
     match = regexp.exec(this.message);
     let groups = match.groups;
@@ -53,25 +43,16 @@ export class PokemonMessage extends Message {
     this.ability2 = groups.ability2;
     this.ability3 = groups.ability3;
     this.stats = [groups.HP, groups.Atk, groups.Def, groups.SpA, groups.SpD, groups.Spe, groups.BST];
-    this.dexNo = groups.dexNo;
-    this.genNo = groups.genNo;
-    this.height = groups.height;
-    this.weight = groups.weight;
-    this.dexColour = groups.dexColour;
-    this.eggGroups = groups.eggGroups;
 
-    // 5. Get optional fields
-    regexp = /(?:Pre-Evolution: (?<preEvolution>[\w\:]+(?:[- ][\w\%]+)?))/;
-    if (regexp.test(this.message)) {
-      match = regexp.exec(this.message);
-      this.preEvolution = match.groups.preEvolution;
-    }
-    regexp = /(?:[^-]Evolution: (?<evolutions>.+))/;
-    if (regexp.test(this.message)) {
-      match = regexp.exec(this.message);
-      this.evolutions = match.groups.evolutions;
-    }
-    return true;
+    // 5. Get extraInfo
+    regexp = /\s+(?<extraInfo>Dex\#: .*)/;
+    if (!regexp.test(this.message)) return false;
+    match = this.message.match(regexp);
+    this.extraInfo = match.groups.extraInfo;
+    // Remove whitespace after pipes
+    regexp = /\| /g;
+    this.extraInfo = this.extraInfo.replaceAll(regexp, '|');
+    return true; 
   }
 
   printInfo() {
@@ -84,8 +65,8 @@ export class PokemonMessage extends Message {
       abilityStr += '|' + this.ability3
     }
     console.log(this.tier + WS + this.name + WS + this.types + WS + abilityStr)
-    const stats = this.stats;
     console.log("HP   Atk  Def  SpA  SpD  Spe  BST");
+    const stats = this.stats;
     for (let i = 0; i < stats.length; i++) {
       if (stats[i] < 100) {
         stats[i] += WS;
@@ -96,17 +77,7 @@ export class PokemonMessage extends Message {
     }
     console.log(`${stats[0]}  ${stats[1]}  ${stats[2]}  ${stats[3]}  ` + 
       `${stats[4]}  ${stats[5]}  ${stats[6]}`);
-    console.log(`|Dex #${this.dexNo}|Gen: ${this.genNo}|Height: ${this.height}|` +
-       `Weight: ${this.weight}|Dex Colour: ${this.dexColour}|Egg Group(s): ${this.eggGroups}`);
-    if (this.preEvolution && this.evolutions) {
-      console.log(`Pre-Evolution: ${this.preEvolution}|Evolution(s): ${this.evolutions}`);
-    }
-    else if (this.preEvolution) {
-      console.log(`Pre-Evolution: ${this.preEvolution}`);
-    }
-    else if (this.evolutions) {
-      console.log(`Evolution(s): ${this.evolutions}`);
-    }
+    console.log(this.extraInfo);
     console.log(this.dexLink);
   }
 }

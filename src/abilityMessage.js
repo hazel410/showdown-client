@@ -17,11 +17,7 @@ export class AbilityMessage extends Message {
     this.effect = match.groups.effect;
 
     // 2. Strip html tags for easier parsing
-    regexp = /<[^>]*>/g;
-    const replaceStr = '';
-    this.message = this.message.replaceAll(regexp, replaceStr);
-    regexp = /((ThickSpace;\&\#[0-9]+)|(ThickSpace)|(\&)|(nbsp)|(;)|(\|pm\|)|(Guest [0-9]+\|\~\|\/raw))*/g;
-    this.message = this.message.replaceAll(regexp, replaceStr);
+    this.stripHTMLTags();
 
     // 3. Get extraInfo
     regexp = /\s+(?<extraInfo>Gen: .*)/;

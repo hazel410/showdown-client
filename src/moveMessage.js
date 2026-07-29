@@ -27,12 +27,7 @@ export class MoveMessage extends Message {
     this.dexLink = match.groups.link;
 
     // 3. Strip html tags for easier parsing
-    regexp = /<[^>]*>/g;
-    const replaceStr = '';
-    this.message = this.message.replaceAll(regexp, replaceStr);
-    regexp = /((ThickSpace;\&\#[0-9]+)|(ThickSpace)|(\&)|(nbsp)|(;)|(\|pm\|)|(Guest [0-9]+\|\~\|\/raw))*/g;
-    this.message = this.message.replaceAll(regexp, replaceStr);
-
+    this.stripHTMLTags();
     // 4. Get move name, power, acc, and effect
     regexp = /\s{2}(?:(?<name>.+)\s{2})(?:Power(?<power>[—0-9]+))?.*?(?:Accuracy(?<accuracy>[0-9\%]+))?[\s](?:PP(?<PP>[0-9]+))[\s](?<effect>.*)/;
     if (!regexp.test(this.message)) return false;

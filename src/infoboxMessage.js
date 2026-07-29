@@ -4,16 +4,10 @@ export class InfoboxMessage extends Message {
     super(message);
   }
   parseMessage() {
-    // 1. Strip html tags
-    let regexp = /<[^>]*>/g;
-    const replaceStr = '';
-    this.message = this.message.replaceAll(regexp, replaceStr);
-    regexp = /((ThickSpace;\&\#[0-9]+)|(ThickSpace)|(\&)|(nbsp)|(;)|(\|pm\|)|(Guest [0-9]+\|\~\|\/raw))*/g;
-    this.message = this.message.replaceAll(regexp, replaceStr);
-
-    // 2. Remove/add whitespace where necessary
-    regexp = /  /g;
-    this.message = this.message.replaceAll(regexp, replaceStr);
+    this.stripHTMLTags();
+    // Remove/add whitespace where necessary
+    let regexp = /  /g;
+    this.message = this.message.replaceAll(regexp, '');
     regexp = /\#x2f/g;
     this.message = this.message.replaceAll(regexp, '/');
     regexp = /(?<pre>[:a-z])(?<post>[A-Z])/g;

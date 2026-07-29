@@ -6,6 +6,7 @@ import MoveMessage from "./moveMessage.js";
 import InfoboxMessage from "./infoboxMessage.js";
 import PokemonMessage from "./pokemonMessage.js";
 import AbilityMessage from './abilityMessage.js';
+import TextMessage from './textMessage.js';
 
 const TEXT_LINE = '########################';
 const VALID_EXIT_COMMANDS = ['/exit', '/ex', 'exit', 'ex'];
@@ -55,8 +56,8 @@ class programManager {
   displayServerResponse(response) {
     response = `${response}`
     if (response.slice(0, 12) !== "|updateuser|" && response.slice(0,10) !== "|challstr|") {
-      console.log(TEXT_LINE);
-      console.log(`[server]: ${response}`);
+      // console.log(TEXT_LINE);
+      // console.log(`[server]: ${response}`);
       this.parseServerResponse(response).printInfo();
       console.log(TEXT_LINE);
     }
@@ -92,10 +93,12 @@ class programManager {
       if (message.parseMessage()) return message;
       return errorMessage;
     }
-    // 5. Determine if pure text (i.e. /help or command w/o args)
-    regexp = /\/text/;
+    // 5. Determine if pure text/error (i.e. /help or command w/o args)
+    regexp = /(\/text)|(\/error)/;
     if (regexp.test(response)) {
-      
+      message = new TextMessage(response);
+      if (message.parseMessage()) return message;
+      return errorMessage;
     }
     return errorMessage;
   }
